@@ -4,7 +4,7 @@
     <PostForm @create="createPost" />
 
     <!-- v-bind - полная, : - коротка форма -->
-    <PostList :posts="posts" />
+    <PostList :posts="posts" @remove="removePost" />
   </div>
 </template>
 
@@ -44,6 +44,9 @@ export default {
   methods: {
     createPost(post) {
       this.posts.push(post);
+    },
+    removePost(post) {
+      this.posts = this.posts.filter((item) => item.id !== post.id);
     },
   },
 };
