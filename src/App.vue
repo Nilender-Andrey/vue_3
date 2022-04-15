@@ -1,7 +1,11 @@
 <template>
   <div class="app">
-    <!-- подписываемся на событие -->
-    <PostForm @create="createPost" />
+    <h1>Страница с постами</h1>
+    <custom-button @click="showDialog">Создать пост</custom-button>
+    <custom-dialog v-model:show="dialogVisible">
+      <!-- подписываемся на событие -->
+      <PostForm @create="createPost" />
+    </custom-dialog>
 
     <!-- v-bind - полная, : - коротка форма -->
     <PostList :posts="posts" @remove="removePost" />
@@ -18,7 +22,6 @@ export default {
     PostList,
   },
 
-  /* Данные */
   data() {
     return {
       posts: [
@@ -38,15 +41,20 @@ export default {
           body: 'Описание_3',
         },
       ],
+      dialogVisible: false,
     };
   },
-  /* Функции */
+
   methods: {
     createPost(post) {
       this.posts.push(post);
+      this.dialogVisible = false;
     },
     removePost(post) {
       this.posts = this.posts.filter((item) => item.id !== post.id);
+    },
+    showDialog() {
+      this.dialogVisible = true;
     },
   },
 };
