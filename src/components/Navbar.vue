@@ -7,6 +7,9 @@
       <custom-button @click="$router.push('/about')" style="margin-left: 20px"
         >О сайте</custom-button
       >
+      <custom-button @click="$router.push('/store')" style="margin-left: 20px"
+        >Store</custom-button
+      >
     </div>
   </div>
 </template>

@@ -13,11 +13,9 @@
     </div>
 
     <custom-dialog v-model:show="dialogVisible">
-      <!-- подписываемся на событие -->
       <PostForm @create="createPost" />
     </custom-dialog>
 
-    <!-- v-bind - полная, : - коротка форма -->
     <PostList
       v-if="!isPostsLoading"
       :posts="sortedAndSearchedPosts"
@@ -25,18 +23,6 @@
     />
 
     <div v-else>Идет загрузка...</div>
-
-    <!--  <dir class="page__wrapper">
-      <div
-        class="page"
-        v-for="pageNumber in totalPage"
-        :key="pageNumber"
-        :class="{ 'current-page': page === pageNumber }"
-        @click="changePage(pageNumber)"
-      >
-        {{ pageNumber }}
-      </div>
-    </dir> -->
 
     <div v-intersection="loadMorePosts" class="observer"></div>
   </div>
@@ -54,20 +40,7 @@ export default {
   },
 
   data() {
-    return {
-      posts: [],
-      dialogVisible: false,
-      isPostsLoading: false,
-      selectedSort: '',
-      searchQuery: '',
-      page: 1,
-      limit: 10,
-      totalPage: 0,
-      sortOptions: [
-        { value: 'title', name: 'По названию' },
-        { value: 'body', name: 'По содержимому' },
-      ],
-    };
+    return {};
   },
 
   methods: {

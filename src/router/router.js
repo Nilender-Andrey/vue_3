@@ -2,6 +2,7 @@ import MainPage from '@/pages/MainPage';
 import PastPage from '@/pages/PastPage';
 import AboutPage from '@/pages/AboutPage';
 import PastIdPage from '@/pages/PastIdPage';
+import PastPageWithStore from '@/pages/PastPageWithStore';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
@@ -20,6 +21,10 @@ const routes = [
   {
     path: '/about',
     component: AboutPage,
+  },
+  {
+    path: '/store',
+    component: PastPageWithStore,
   },
 ];
 
