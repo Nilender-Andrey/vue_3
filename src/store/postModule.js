@@ -1,7 +1,8 @@
+import axios from 'axios';
+
 export const postModule = {
   state: () => ({
     posts: [],
-
     isPostsLoading: false,
     selectedSort: '',
     searchQuery: '',
@@ -48,7 +49,12 @@ export const postModule = {
     setSelectedSort(state, selectedSort) {
       state.selectedSort = selectedSort;
     },
+
+    removePost(state, post) {
+      state.posts = state.posts.filter((item) => item.id !== post.id);
+    },
   },
+
   actions: {
     async fetchPosts({ state, commit }) {
       try {
@@ -67,10 +73,9 @@ export const postModule = {
           response.headers['x-total-count'] / state.limit,
         );
         commit('setTotalPage', totalPage);
-
         commit('setPosts', response.data);
       } catch (error) {
-        alert('Ошибка');
+        console.log(error);
       } finally {
         commit('setLoading', false);
       }
@@ -79,7 +84,7 @@ export const postModule = {
     async loadMorePosts({ state, commit }) {
       try {
         if (state.page <= state.totalPage) {
-          commit('setPage', state.page++);
+          commit('setPage', (state.page += 1));
 
           const response = await axios.get(
             'https://jsonplaceholder.typicode.com/posts',
@@ -94,8 +99,9 @@ export const postModule = {
           commit('setPosts', [...state.posts, ...response.data]);
         }
       } catch (error) {
-        alert('Ошибка');
+        console.log(error);
       }
     },
   },
+  namespaced: true,
 };

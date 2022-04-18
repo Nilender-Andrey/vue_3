@@ -2,14 +2,23 @@
   <div>
     <h1>Страница с постами</h1>
 
-    <custom-input v-focus v-model="searchQuery" placeholder="Поиск..." />
+    <custom-input
+      v-focus
+      v-model="searchQuery"
+      @update:model-value="setSearchQuery"
+      placeholder="Поиск..."
+    />
 
     <div class="post__btns">
       <custom-button class="btn_create-post" @click="showDialog"
         >Создать пост</custom-button
       >
 
-      <my-select v-model="selectedSort" :options="sortOptions" />
+      <my-select
+        :model-value="selectedSort"
+        @update:model-value="setSelectedSort"
+        :options="sortOptions"
+      />
     </div>
 
     <custom-dialog v-model:show="dialogVisible">
@@ -31,7 +40,7 @@
 <script>
 import PostForm from '@/components/PostForm';
 import PostList from '@/components/PostList';
-import axios from 'axios';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
   components: {
@@ -40,99 +49,53 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+      dialogVisible: false,
+    };
   },
 
   methods: {
+    ...mapMutations({
+      setPage: 'post/setPage',
+      setSearchQuery: 'post/setSearchQuery',
+      setSelectedSort: 'post/setSelectedSort',
+      removePost: 'post/removePost',
+    }),
+
+    ...mapActions({
+      loadMorePosts: 'post/loadMorePosts',
+      fetchPosts: 'post/fetchPosts',
+    }),
+
     createPost(post) {
       this.posts.push(post);
       this.dialogVisible = false;
     },
-    removePost(post) {
-      this.posts = this.posts.filter((item) => item.id !== post.id);
-    },
+
     showDialog() {
       this.dialogVisible = true;
     },
-
-    async fetchPosts() {
-      try {
-        this.isPostsLoading = true;
-        const response = await axios.get(
-          'https://jsonplaceholder.typicode.com/posts',
-          {
-            params: {
-              _page: this.page,
-              _limit: this.limit,
-            },
-          },
-        );
-
-        this.totalPage = Math.ceil(
-          response.headers['x-total-count'] / this.limit,
-        );
-
-        this.posts = response.data;
-      } catch (error) {
-        alert('Ошибка');
-      } finally {
-        this.isPostsLoading = false;
-      }
-    },
-
-    async loadMorePosts() {
-      try {
-        if (this.page <= this.totalPage) {
-          this.page++;
-
-          const response = await axios.get(
-            'https://jsonplaceholder.typicode.com/posts',
-            {
-              params: {
-                _page: this.page,
-                _limit: this.limit,
-              },
-            },
-          );
-
-          this.posts = [...this.posts, ...response.data];
-        }
-      } catch (error) {
-        alert('Ошибка');
-      }
-    },
-    /*     changePage(pageNumber) {
-      this.page = pageNumber;
-      this.fetchPosts();
-    }, */
   },
 
   mounted() {
     this.fetchPosts();
   },
   computed: {
-    sortedPosts() {
-      if (this.selectedSort && this.page <= this.totalPage) {
-        return [...this.posts].sort((post1, post2) =>
-          post1[this.selectedSort].localeCompare(post2[this.selectedSort]),
-        );
-      }
-      return this.posts;
-    },
-    sortedAndSearchedPosts() {
-      return this.sortedPosts.filter((post) =>
-        post.title.toLowerCase().includes(this.searchQuery.toLowerCase()),
-      );
-    },
+    ...mapState({
+      posts: (state) => state.post.posts,
+      isPostsLoading: (state) => state.post.isPostsLoading,
+      selectedSort: (state) => state.post.selectedSort,
+      searchQuery: (state) => state.post.searchQuery,
+      page: (state) => state.post.page,
+      limit: (state) => state.post.limit,
+      totalPage: (state) => state.post.totalPage,
+      sortOptions: (state) => state.post.sortOptions,
+    }),
+    ...mapGetters({
+      sortedPosts: 'post/sortedPosts',
+      sortedAndSearchedPosts: 'post/sortedAndSearchedPosts',
+    }),
   },
-
-  /*  watch: {
-    selectedSort(newValue) {
-      this.posts.sort((post1, post2) =>
-        post1[newValue].localeCompare(post2[newValue]),
-      );
-    },
-  }, */
 };
 </script>
 
