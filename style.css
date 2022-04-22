@@ -16,6 +16,10 @@ body {
   font-family: 'Ubuntu', sans-serif;
 }
 
+[v-cloak] {
+  display: none;
+}
+
 .container {
   width: 100%;
   max-width: 800px;
