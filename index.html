@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToDo List</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div id="app">
+    <header class="header">
+      <div class="header__container container">
+        <h1 class="logo">ToDo List</h1>
+        <div class="header__form form">
+          <input class="form__input" type="text" @keyup.enter="addTask" v-model="inputValue"
+            placeholder="Enter a new task">
+          <button class="form__btn" @click="addTask">Add a new task</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main container">
+      <div class="main-fulfill">
+        <div class="main-title">
+          <h2 class="main-title__text">To Do</h2>
+          <div class="main-title__tasks-counter">{{fulfillTask.length}}</div>
+        </div>
+
+        <ul class="task-list" v-if="fulfillTask.length">
+          <li class="task-list__item item" v-for="task in fulfillTask" :key="task.id">
+            <input class="item__checkbox checkbox" type="checkbox" @change="checkHandler(task.id)">
+            <span class="item__name">{{task.text}}</span>
+            <button class="item__btn item__btn_remove" @click="removeTask(task.id)">Remove</button>
+          </li>
+        </ul>
+
+        <div class="main__text" v-else>No tasks</div>
+      </div>
+
+
+      <div class="main-done">
+        <div class="main-title">
+          <h2 class="main-title__text">Done</h2>
+          <div class="main-title__tasks-counter">{{doneTask.length}}</div>
+        </div>
+
+
+        <ul class="task-list task-list_done">
+          <li class="task-list__item item" v-for="task in doneTask" :key="task.id">
+            <input class="item__checkbox checkbox" type="checkbox" @change="checkHandler(task.id)" checked>
+            <span class="item__name item__name_done">{{task.text}}</span>
+            <button class="item__btn item__btn_remove" @click="removeTask(task.id)">Remove</button>
+          </li>
+        </ul>
+      </div>
+
+    </main>
+  </div>
+
+
+
+
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
